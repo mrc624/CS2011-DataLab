@@ -182,6 +182,7 @@ int bitXor(int x, int y) {
   int or = ~(~x & ~y);
   return or & nand;
 }
+
 /* 
  * tmin - return minimum two's complement integer 
  *   Legal ops: ! ~ & ^ | + << >>
@@ -191,6 +192,7 @@ int bitXor(int x, int y) {
 int tmin(void) {
   return 1 << 31;
 }
+
 //2
 /*
  * isTmax - returns 1 if x is the maximum, two's complement number,
@@ -199,9 +201,12 @@ int tmin(void) {
  *   Max ops: 10
  *   Rating: 1
  */
+
 int isTmax(int x) {
-  return 2;
+  int mask = 1 << 31; // TMin
+  return !(~(mask ^ x)); // if it returns all 1s, its Tmax, it it returns anything else it's not
 }
+
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
  *   where bits are numbered from 0 (least significant) to 31 (most significant)
@@ -210,9 +215,13 @@ int isTmax(int x) {
  *   Max ops: 12
  *   Rating: 2
  */
+
 int allOddBits(int x) {
-  return x;
+  int mask = 0xAAAAAAAA; // sets an int where every odd bit is 1 and every even bit is 0
+  int alteredMask = (mask & x); // if returns 0xAAAAAAAA, then it has every odd bit
+  return !(alteredMask ^ mask);
 }
+
 /* 
  * negate - return -x 
  *   Example: negate(1) = -1.
@@ -220,9 +229,12 @@ int allOddBits(int x) {
  *   Max ops: 5
  *   Rating: 2
  */
+ 
 int negate(int x) {
-  return 2;
+  int invertedX = (~x);
+  return invertedX + 1;
 }
+
 //3
 /* 
  * isAsciiDigit - return 1 if 0x30 <= x <= 0x39 (ASCII codes for characters '0' to '9')
@@ -233,11 +245,70 @@ int negate(int x) {
  *   Max ops: 15
  *   Rating: 3
  */
-int isAsciiDigit(int x) {
-  //0011 0000
-  //0011 0111
 
-  
+int isAsciiDigit(int x) {
+  int mask0 = 0x30;
+  int mask1 = 0x31;
+  int mask2 = 0x32;
+  int mask3 = 0x33;
+  int mask4 = 0x34;
+  int mask5 = 0x35;
+  int mask6 = 0x36;
+  int mask7 = 0x37;
+  int mask8 = 0x38;
+  int mask9 =0x39;
+
+  if (!(mask0 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask1 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask2 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask3 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask4 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask5 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask6 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask7 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask8 ^ x))
+  {
+    return 1;
+  }
+
+  if (!(mask9 ^ x))
+  {
+    return 1;
+  }
+
+  return 0;
 
 }
 /* 
