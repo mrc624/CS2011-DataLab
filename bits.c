@@ -203,7 +203,7 @@ int tmin(void) {
  */
 
 int isTmax(int x) {
-  int TmaxBool = !(x + 1 ^ ~x);
+  int TmaxBool = !((x + 1) ^ ~x);
   int minusOneBool = !!(x + 1);
   return TmaxBool & minusOneBool;
   /*;
@@ -222,7 +222,9 @@ int isTmax(int x) {
  */
 
 int allOddBits(int x) {
-  int mask = 0xff; // sets an int where every odd bit is 1 and every even bit is 0
+  int mask = 0xAA;                     
+  mask = (mask << 8) | mask;           
+  mask = (mask << 16) | mask;
   int alteredMask = (mask & x); // if returns 0xAAAAAAAA, then it has every odd bit
   return !(alteredMask ^ mask);
 }
@@ -252,7 +254,7 @@ int negate(int x) {
  */
 
 int isAsciiDigit(int x) {
-  int mask 3 << 4;
+  int mask0 = 0b011;
 }
 /* 
  * conditional - same as x ? y : z 
@@ -262,7 +264,9 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  int mask = !!x;
+  mask = 1 + ~mask;
+  return (y & ~mask) | (z & mask);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
