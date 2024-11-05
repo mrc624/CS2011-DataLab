@@ -225,8 +225,8 @@ int allOddBits(int x) {
   int mask = 0xAA;                     
   mask = (mask << 8) | mask;           
   mask = (mask << 16) | mask;
-  int alteredMask = (mask & x); // if returns 0xAAAAAAAA, then it has every odd bit
-  return !(alteredMask ^ mask);
+  //int alteredMask = (mask & x); // if returns 0xAAAAAAAA, then it has every odd bit
+  return !((mask & x) ^ mask);
 }
 
 /* 
@@ -278,9 +278,14 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
+  int xySigns = !(x >> 31) ^ !(y >> 31); // returns 1 if they have different signs
+  int xSign = (x >> 31); // returns 1 if x is negative
+
   int maxVal = y;
-  int high = y + (~x + 1);
-  int highSign = high << 31
+  int high = maxVal + (~x + 1);
+  int highSign = high >> 31;
+
+  return (xySigns & xSign) | (!xySigns & !highSign); //| (!!(x ^ y));
 }
 //4
 /* 
