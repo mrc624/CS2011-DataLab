@@ -203,8 +203,9 @@ int tmin(void) {
  */
 
 int isTmax(int x) {
-  int mask = 1 << 31; // TMin
-  return !(~(mask ^ x)); // if it returns all 1s, its Tmax, it it returns anything else it's not
+  int TmaxBool = !((x + 1) ^ ~x);
+  int minusOneBool = !!(x+1);
+  return TmaxBool & minusOneBool;
 }
 
 /* 
@@ -217,9 +218,10 @@ int isTmax(int x) {
  */
 
 int allOddBits(int x) {
-  int mask = 0xAAAAAAAA; // sets an int where every odd bit is 1 and every even bit is 0
-  int alteredMask = (mask & x); // if returns 0xAAAAAAAA, then it has every odd bit
-  return !(alteredMask ^ mask);
+  int mask = 0xAA;
+  mask = (mask << 8) | mask;
+  mask = (mask << 16) | mask;
+  return !( (mask & x) ^ mask);
 }
 
 /* 
