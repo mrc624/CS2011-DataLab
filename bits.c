@@ -238,8 +238,7 @@ int allOddBits(int x) {
  */
  
 int negate(int x) {
-  int invertedX = (~x);
-  return invertedX + 1;
+  return ~x + 1;
 }
 
 //3
@@ -254,7 +253,18 @@ int negate(int x) {
  */
 
 int isAsciiDigit(int x) {
-  int mask0 = 0b011;
+  int minval = ~0x30 + 1;
+
+  int low = x + minval;
+  int lowsign = low >> 31;
+
+  int maxval = 0x39;
+
+  int high = maxval + ~x + 1;
+  int highsign = high >> 31;
+
+  return !lowsign & !highsign;
+
 }
 
 /* 
@@ -297,7 +307,11 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  int invertedX = ~x;
+  
+  int xSign = (x >> 31);
+  int negatedX = ~x + 1;
+  int negatedXSign = (negatedX >> 31);
+  return ((xSign | negatedXSign) + 1);
   
 }
 /* howManyBits - return the minimum number of bits required to represent x in
