@@ -247,18 +247,18 @@ int negate(int x) {
  */
 
 int isAsciiDigit(int x) {
-  int mask0 = 0x30;
-  int mask1 = 0x31;
-  int mask2 = 0x32;
-  int mask3 = 0x33;
-  int mask4 = 0x34;
-  int mask5 = 0x35;
-  int mask6 = 0x36;
-  int mask7 = 0x37;
-  int mask8 = 0x38;
-  int mask9 =0x39;
 
-  return ( !(mask0 ^ x) | !(mask1 ^ x) | !(mask2 ^ x) | !(mask3 ^ x) | !(mask4 ^ x) | !(mask5 ^ x) | !(mask6 ^ x) | !(mask7 ^ x) | !(mask8 ^ x) | !(mask9 ^ x));
+  int minval = ~0x30 + 1;
+
+  int low = x + minval;
+  int lowsign = low >> 31;
+
+  int maxval = 0x39;
+
+  int high = maxval + ~x + 1;
+  int highsign = high >> 31;
+
+  return !lowsign & !highsign;
 
 }
 /* 
