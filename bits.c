@@ -256,6 +256,7 @@ int negate(int x) {
 int isAsciiDigit(int x) {
   int mask0 = 0b011;
 }
+
 /* 
  * conditional - same as x ? y : z 
  *   Example: conditional(2,4,5) = 4
@@ -268,6 +269,7 @@ int conditional(int x, int y, int z) {
   mask = 1 + ~mask;
   return (y & ~mask) | (z & mask);
 }
+
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
  *   Example: isLessOrEqual(4,5) = 1.
@@ -276,7 +278,9 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+  int maxVal = y;
+  int high = y + (~x + 1);
+  int highSign = high << 31
 }
 //4
 /* 
@@ -288,7 +292,8 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  int invertedX = ~x;
+  
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
