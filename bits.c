@@ -258,57 +258,7 @@ int isAsciiDigit(int x) {
   int mask8 = 0x38;
   int mask9 =0x39;
 
-  if (!(mask0 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask1 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask2 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask3 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask4 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask5 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask6 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask7 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask8 ^ x))
-  {
-    return 1;
-  }
-
-  if (!(mask9 ^ x))
-  {
-    return 1;
-  }
-
-  return 0;
+  return ( !(mask0 ^ x) | !(mask1 ^ x) | !(mask2 ^ x) | !(mask3 ^ x) | !(mask4 ^ x) | !(mask5 ^ x) | !(mask6 ^ x) | !(mask7 ^ x) | !(mask8 ^ x) | !(mask9 ^ x));
 
 }
 /* 
