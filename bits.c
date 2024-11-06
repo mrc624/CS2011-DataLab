@@ -275,9 +275,11 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  int mask = !!x;
-  mask = 1 + ~mask;
-  return (y & ~mask) | (z & mask);
+  int xSign = (x >> 31);
+  int negatedX = ~x + 1;
+  int negatedXSign = (negatedX >> 31);
+  int allOnesOrZeros = ((xSign | negatedXSign));
+  return (allOnesOrZeros & y) | (~allOnesOrZeros & z);
 }
 
 /* 
