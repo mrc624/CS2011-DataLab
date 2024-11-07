@@ -362,7 +362,40 @@ int howManyBits(int x) {
  */
 
 unsigned floatScale2(unsigned uf) {
-  return 2;
+// if uf is zero or infinity, return if
+  int expMask = 0xFF << 23;
+  int exp = expMask & uf;
+  if(!(uf) || !(exp ^ expMask)){
+
+    return uf;
+
+  } else{
+
+    // separate sign
+    int signMask = 1 << 31;
+    int sign = signMask & uf;
+
+    int fracMask = 0x7FFFFF;
+    int frac = fracMask & uf;
+
+// check if there's anything in exponent:
+    // if yes: only mess with exponent
+    // if no: only mess with fraction
+    if (!!exp){
+      // separate exp & multiply by 2
+      exp = exp >> 23;
+      exp = exp + 1;
+      exp = exp << 23;
+
+    } else {
+
+      frac = frac << 1;
+
+    }
+    return sign | exp | frac;
+
+  }
+
 }
 
 /* 
