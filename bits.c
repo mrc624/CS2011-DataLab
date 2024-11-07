@@ -271,7 +271,11 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  int signx = x >> 31;
+  int x_negate = ~x + 1;
+  int negate_signx = x_negate >> 31; 
+  int ones_or_zeros = signx | negate_signx;
+  return (ones_or_zeros & y) | (~ones_or_zeros & z);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -281,7 +285,14 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+  int xySigns = !(x >> 31) ^ !(y >> 31);
+  int xSign = (x >> 31);
+
+  int maxVal = y;
+  int high = maxVal +(~x + 1);
+  int highSign = high >> 31;
+
+  return (xySigns & xSign) | (~xySigns & !highSign);
 }
 //4
 /* 
@@ -293,7 +304,10 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  int signx = x >> 31;
+  int negate_x = ~x + 1;
+  int negate_signx = negate_x >> 31;
+  return (signx | negate_signx) + 1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -308,7 +322,18 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+  int pos = 0;
+  int sign = x >> 31;
+  x = (sign & ~x) | (~sign & x);
+
+  pos = pos + ((!!(x >> (pos + 16))) << 4);
+  pos = pos + ((!!(x >> (pos + 8))) << 3);
+  pos = pos + ((!!(x >> (pos + 4))) << 2);
+  pos = pos + ((!!(x >> (pos + 2))) << 1);
+  pos = pos + (!!(x >> (pos + 1)));
+  pos = pos + (x >> pos);
+
+  return pos + 1;
 }
 //float
 /* 
