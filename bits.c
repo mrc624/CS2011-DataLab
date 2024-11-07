@@ -328,9 +328,26 @@ int logicalNeg(int x) {
  *  Max ops: 90
  *  Rating: 4
  */
+ 
 int howManyBits(int x) {
-  return 0;
+  int sign, pos; // ALL SIGNED!
+  sign = x >> 31;
+  x = (sign & (~x)) | (~sign & x);
+
+  pos = 0;
+  pos = pos + ((!!(x >> (pos + 16))) << 4);
+  pos = pos + ((!!(x >> (pos + 8))) << 3);
+  pos = pos + ((!!(x >> (pos + 4))) << 2);
+  pos = pos + ((!!(x >> (pos + 2))) << 1);
+  pos = pos + (!!(x >> (pos + 1)));
+  pos = pos + (x >> pos);
+
+  return pos + 1;
+
+  // figure out if x is positive or negative
+  // if x is positive then return every bit from its biggest 1 over to 1 and then
 }
+
 //float
 /* 
  * floatScale2 - Return bit-level equivalent of expression 2*f for
@@ -343,9 +360,11 @@ int howManyBits(int x) {
  *   Max ops: 30
  *   Rating: 4
  */
+
 unsigned floatScale2(unsigned uf) {
   return 2;
 }
+
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
  *   for floating point argument f.
