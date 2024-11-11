@@ -410,10 +410,49 @@ unsigned floatScale2(unsigned uf) {
  *   Max ops: 30
  *   Rating: 4
  */
-int floatFloat2Int(unsigned uf) {
-  return 2;
+ int floatFloat2Int(unsigned uf) {
+  //v = (–1)^s * M * 2^E
+  int sign = uf >> 31;
+  int exp = (uf >> 23) & 0xFF;
+  int frac = uf & 0x7FFFFF;
+  int value;
+
+  int bias = 127;
+  int E; 
+  E = exp - bias;
+
+  if (!(exp ^ (0xFF << 23))) {
+    return 0x80000000u;  // NaN or infinity
+  }
+
+  if (!exp) {
+    return 0;
+  }
+
+// normalize the fraction component
+  frac = frac | (1 << 23);
+
+  if (E < 0) {
+    return 0;
+  }
+
+  if (E > 31) {
+    return 0x80000000u;
+  }
+
+  if (E > 23) {
+    value = frac << (E - 23);  
+  } else {
+    value = frac >> (23 - E);  
+  }
+
+  if (sign) {
+    value = -value;
+  }
+
+  return value;
 }
-/* #include "floatPower2.c" commented by Weinstock request by MCV 20210929-1619 */
+
 /* 
  * floatNegate - Return bit-level equivalent of expression -f for
  *   floating point argument f.
@@ -426,5 +465,30 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 2
  */
 unsigned floatNegate(unsigned uf) {
- return 2;
+
+    if((((uf >> 23) & 0xFF) == 0xFF) && ((uf & 0x7FFFFF) != 0)) {
+      return uf;  // NaN or infinity
+    }
+
+    return uf ^ (1<<31);
+
+/*
+    if(!(((uf >> 23) & 0xFF) ^ 0xFF) && !!((uf & 0x7FFFFF) ^ 0)) {
+      return uf;  // NaN or infinity
+    }
+
+    return uf ^ (1<<31);
+    */
+
+    // turns sign bit to 0
+    /*
+    int expAndFrac;
+    int sign;
+    expAndFrac = uf & 0x7FFFFFFF;
+
+    sign = ~(uf >> 31);
+
+    return sign | expAndFrac;
+    */
+
 }
