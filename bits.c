@@ -170,6 +170,12 @@ NOTES:
    - 285 hentaigana
    - 3 additional Zanabazar Square characters */
 //1
+
+
+//Name: Matthew Clouiter
+//Partner: Molly Olsen
+
+
 /* 
  * bitXor - x^y using only ~ and & 
  *   Example: bitXor(4, 5) = 1
@@ -178,6 +184,7 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
+  //logical equivalent of bitxor is a nand gate and or gate feeding an and gate
   int nand = ~(x & y);
   int or = ~(~x & ~y);
   return or & nand;
@@ -203,7 +210,7 @@ int tmin(void) {
  */
 
 int isTmax(int x) {
-  int TmaxBool = !((x + 1) ^ ~x);
+  int TtaxBool = !((x + 1) ^ ~x);
   int minusOneBool = !!(x+1);
   return TmaxBool & minusOneBool;
 }
@@ -218,9 +225,11 @@ int isTmax(int x) {
  */
 
 int allOddBits(int x) {
-  int mask = 0xAA;
+  int mask = 0xAA; //mask representing all odd bits
+  //create a mask that will contain all odd bits
   mask = (mask << 8) | mask;
   mask = (mask << 16) | mask;
+  //check x for all odd bits
   return !( (mask & x) ^ mask);
 }
 
@@ -348,7 +357,30 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+  int sign = uf >> 31;
+  int expMask = 0xFF << 23;
+  int exp = expMask & uf;
+  int mantissaMask = 0x7FFFFF;
+  int mantissa = mantissaMask & uf;
+
+  if ( !(uf) || !(exp ^ expMask))
+  {
+    return uf;
+  }
+  else
+  {
+    if (!!exp)
+    {
+      exp = exp >> 23;
+      exp = exp + 1;
+      exp = exp << 23;
+    }
+    else
+    {
+      mantissa = mantissa << 1;
+    }
+    return (sign << 31) | exp | mantissa;
+  }
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
@@ -363,7 +395,47 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  return 2;
+  int sign = uf >> 31;
+  int expMask = 0xFF << 23;
+  int exp = (uf & expMask) >> 23;
+  int mantissa = uf & 0x7FFFFF;
+  int value;
+  int bias = 127;
+  int E = exp - bias;
+  mantissa = mantissa | (1 << 23);
+
+  if (!(exp ^ expMask))
+  {
+    return 0x80000000u;
+  }
+  else if (!exp)
+  {
+    return 0;
+  }
+  else if (E < 0)
+  {
+    return 0;
+  }
+  else if (E > 31)
+  {
+    return 0x80000000u;
+  }
+
+  if (E > 23)
+  {
+    value = mantissa << (E - 23);
+  }
+  else
+  {
+    value = mantissa >> (23 - E);
+  }
+
+  if (sign)
+  {
+    value = -value;
+  }
+
+  return value;
 }
 /* #include "floatPower2.c" commented by Weinstock request by MCV 20210929-1619 */
 /* 
@@ -378,5 +450,15 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 2
  */
 unsigned floatNegate(unsigned uf) {
- return 2;
+  int expMask = 0xFF << 23;
+  int exp = (expMask & uf) >> 23;
+  int mantissa = uf & 0x7FFFFF;
+  int signMask = 1 << 31;
+
+  if (!(exp ^ (0xFF)) && !!(mantissa ^ 0))
+  {
+    return uf;
+  }
+
+  return uf ^ (signMask);
 }
