@@ -335,7 +335,6 @@ int logicalNeg(int x) {
  */
 int howManyBits(int x) {
   //move through the int and store the amount of bits as it is processed
-
   int pos = 0;
   int sign = x >> 31;
   x = (sign & ~x) | (~sign & x); //make x positive
@@ -369,23 +368,23 @@ unsigned floatScale2(unsigned uf) {
   int mantissaMask = 0x7FFFFF;
   int mantissa = mantissaMask & uf;
 
-  if ( !(uf) || !(exp ^ expMask))
+  if ( !(uf) || !(exp ^ expMask)) //if uf is 0 or the exp is all 1 the argument is invalid
   {
     return uf;
   }
   else
   {
-    if (!!exp)
+    if (!!exp) //if the exp is nonzero double uf in the exp
     {
       exp = exp >> 23;
       exp = exp + 1;
       exp = exp << 23;
     }
-    else
+    else //if exp is zero double it in the mantissa
     {
       mantissa = mantissa << 1;
     }
-    return (sign << 31) | exp | mantissa;
+    return (sign << 31) | exp | mantissa; //reconstruct the float
   }
 }
 /* 
@@ -410,23 +409,24 @@ int floatFloat2Int(unsigned uf) {
   int E = exp - bias;
   mantissa = mantissa | (1 << 23);
 
-  if (!(exp ^ expMask))
+  if (!(exp ^ expMask)) //if exp is all 1 uf is invalid
   {
     return 0x80000000u;
   }
-  else if (!exp)
+  else if (!exp) //if exp is all zeros return 0
   {
     return 0;
   }
-  else if (E < 0)
+  else if (E < 0) //if E is less than 0 then the number is too small to conver to int and will go to zero
   {
     return 0;
   }
-  else if (E > 31)
+  else if (E > 31) //if E is is greater than 31 uf is invalid
   {
     return 0x80000000u;
   }
 
+  //we have now tested the cases and uf is valid and ready to be operated on
   if (E > 23)
   {
     value = mantissa << (E - 23);
@@ -436,6 +436,7 @@ int floatFloat2Int(unsigned uf) {
     value = mantissa >> (23 - E);
   }
 
+  //handle negation
   if (sign)
   {
     value = -value;
@@ -461,11 +462,11 @@ unsigned floatNegate(unsigned uf) {
   int mantissa = uf & 0x7FFFFF;
   int signMask = 1 << 31;
 
-  if(((exp) == 0xFF) && (mantissa !=0))
+  if(((exp) == 0xFF) && (mantissa !=0)) //exp is all 1s and invalid
   {
     return uf;
   }
 
-  return uf ^ signMask;
+  return uf ^ signMask; //change the sign
 
 }
