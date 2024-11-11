@@ -210,9 +210,9 @@ int tmin(void) {
  */
 
 int isTmax(int x) {
-  int TtaxBool = !((x + 1) ^ ~x);
-  int minusOneBool = !!(x+1);
-  return TmaxBool & minusOneBool;
+  int max = !((x + 1) ^ ~x);
+  int minusOne = !!(x+1);
+  return max & minusOne;
 }
 
 /* 
@@ -242,8 +242,8 @@ int allOddBits(int x) {
  */
  
 int negate(int x) {
-  int invertedX = (~x);
-  return invertedX + 1;
+  //to negate a value the entire value is inverted and then 1 is added
+  return ~x + 1;
 }
 
 //3
@@ -259,18 +259,20 @@ int negate(int x) {
 
 int isAsciiDigit(int x) {
 
-  int minval = ~0x30 + 1;
+  int minval = ~0x30 + 1; //minimum ascii digit
 
+  //lower ascii digit
   int low = x + minval;
   int lowsign = low >> 31;
 
-  int maxval = 0x39;
+  int maxval = 0x39;  //maximum ascii digit
 
+  //higher ascii digit
   int high = maxval + ~x + 1;
   int highsign = high >> 31;
 
+  //if both signs are 0 then the operations were performed succesfully proving the digits are ascii
   return !lowsign & !highsign;
-
 }
 /* 
  * conditional - same as x ? y : z 
@@ -281,10 +283,10 @@ int isAsciiDigit(int x) {
  */
 int conditional(int x, int y, int z) {
   int signx = x >> 31;
-  int x_negate = ~x + 1;
-  int negate_signx = x_negate >> 31; 
-  int ones_or_zeros = signx | negate_signx;
-  return (ones_or_zeros & y) | (~ones_or_zeros & z);
+  int minus_x = ~x + 1;
+  int minus_x_sign = minus_x >> 31; 
+  int ones_zero = signx | minus_x_sign; //all ones of all zeros
+  return (ones_zero & y) | (~ones_zero & z);  //if all ones then it is true, if all zeros it is false
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -294,14 +296,15 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  int xySigns = !(x >> 31) ^ !(y >> 31);
-  int xSign = (x >> 31);
+  int xy_sign = !(x >> 31) ^ !(y >> 31);
+  int x_sign = (x >> 31);
+  
+  int upper_bound = y;
+  int minus_x = ~x + 1;
+  int high = upper_bound + minus_x;
+  int high_sign = high >> 31;
 
-  int maxVal = y;
-  int high = maxVal +(~x + 1);
-  int highSign = high >> 31;
-
-  return (xySigns & xSign) | (~xySigns & !highSign);
+  return (xy_sign & x_sign) | (~xy_sign & !high_sign); //if x and y signs are the same then it is true
 }
 //4
 /* 
@@ -331,10 +334,13 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
+  //move through the int and store the amount of bits as it is processed
+
   int pos = 0;
   int sign = x >> 31;
-  x = (sign & ~x) | (~sign & x);
+  x = (sign & ~x) | (~sign & x); //make x positive
 
+  //move through x going by 1/2 bits each time
   pos = pos + ((!!(x >> (pos + 16))) << 4);
   pos = pos + ((!!(x >> (pos + 8))) << 3);
   pos = pos + ((!!(x >> (pos + 4))) << 2);
@@ -342,7 +348,7 @@ int howManyBits(int x) {
   pos = pos + (!!(x >> (pos + 1)));
   pos = pos + (x >> pos);
 
-  return pos + 1;
+  return pos + 1; //add 1 to account for sign change
 }
 //float
 /* 
@@ -455,10 +461,11 @@ unsigned floatNegate(unsigned uf) {
   int mantissa = uf & 0x7FFFFF;
   int signMask = 1 << 31;
 
-  if (!(exp ^ (0xFF)) && !!(mantissa ^ 0))
+  if(((exp) == 0xFF) && (mantissa !=0))
   {
     return uf;
   }
 
-  return uf ^ (signMask);
+  return uf ^ signMask;
+
 }
